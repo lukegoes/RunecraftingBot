@@ -32,7 +32,7 @@ public class MakingRunes extends Tasks{
         }
 
         GameObject ruins = GameObjects.closest(obj -> obj.getName().equals("Mysterious ruins"));
-        if (ruins != null && ruins.distance() < 15) {
+        if (ruins != null && ruins.distance() < 10) {
 
             if (Camera.getPitch() < 65) {
                 Camera.rotateToPitch(Calculations.random(65, 90));

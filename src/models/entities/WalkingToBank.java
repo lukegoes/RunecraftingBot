@@ -34,6 +34,25 @@ public class WalkingToBank extends Tasks{
             return Utils.getGaussian(600, 1200);
         }
 
+        if (Players.getLocal().isMoving() && Calculations.random(1, 20) == 1) {
+            log("Action -> Moving camera.");
+
+            int currentYaw = Camera.getYaw();
+            int rotationAmount;
+
+            if (Calculations.random(0, 2) == 0) {
+                rotationAmount = Calculations.random(-60, -20);
+            } else {
+                rotationAmount = Calculations.random(20, 60);
+            }
+
+            Camera.rotateToYaw(currentYaw + rotationAmount);
+
+            if (Calculations.random(1, 3) == 1) {
+                Camera.rotateToPitch(Calculations.random(300, 383));
+            }
+        }
+
         if (Walking.shouldWalk(Calculations.random(3, 7))) {
             log("Action -> Walking to bank.");
             if (Walking.walk(BanksAreas.FALADOR.getArea().getRandomTile())) {
@@ -41,13 +60,7 @@ public class WalkingToBank extends Tasks{
             }
         }
 
-        if (Players.getLocal().isMoving() && Calculations.random(1, 10) == 1) {
-            log("Action -> Moving camera.");
-            int baseYaw = Camera.getYaw();
-            int humanYaw = baseYaw + Calculations.random(-15, 15);
-            int humanPitch = Calculations.random(40, 90);
-            Camera.rotateTo(humanYaw, humanPitch);
-        }
+
 
         return Utils.getGaussian(450, 850);
     }

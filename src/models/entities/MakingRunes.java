@@ -1,5 +1,6 @@
 package models.entities;
 
+import application.Main;
 import models.enums.RuinsAreas;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
@@ -24,15 +25,24 @@ public class MakingRunes extends Tasks{
     public int execute() {
         GameObject altar = GameObjects.closest(obj -> obj.getName().equals("Altar"));
         if (altar != null && altar.distance() < 20) {
+            int startRunes = Inventory.count("Air rune");
             if (altar.interact("Craft-rune")) {
                 log("Action -> Interacting with Altar.");
                 Sleep.sleepUntil(() -> !Inventory.contains("Rune essence"), 5000);
+                int endRunes = Inventory.count("Air rune");
+
+                int craftedAmount = endRunes - startRunes;
+                if (craftedAmount > 0) {
+                    Main.runesCrafted += craftedAmount;
+                    log("Criadas " + craftedAmount + " Air runes. Total: " + Main.runesCrafted);
+                }
             }
             return Utils.getGaussian(600, 900);
         }
 
         GameObject ruins = GameObjects.closest(obj -> obj.getName().equals("Mysterious ruins"));
         if (ruins != null && ruins.distance() < 10) {
+            Main.currentStatus = "Entrando nas Ruínas";
 
             if (Camera.getPitch() < 65) {
                 Camera.rotateToPitch(Calculations.random(65, 90));
@@ -49,6 +59,7 @@ public class MakingRunes extends Tasks{
             return Utils.getGaussian(400, 800);
         }
         if (Walking.shouldWalk(6)) {
+            Main.currentStatus = "Caminhando para Ruínas";
             Walking.walk(RuinsAreas.AIR.getArea());
         }
 

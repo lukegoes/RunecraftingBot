@@ -1,5 +1,6 @@
 package models.entities;
 
+import application.Main;
 import models.enums.BanksAreas;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
@@ -22,10 +23,12 @@ public class WalkingToBank extends Tasks{
 
     @Override
     public int execute() {
+        Main.currentStatus = "Caminhando para o Banco";
         GameObject portal = GameObjects.closest("Portal");
 
         if (portal != null) {
             log("Action -> Leaving altar.");
+            Main.currentStatus = "Saindo do Altar";
             if (portal.interact("Use")) {
                 Sleep.sleepUntil(() -> GameObjects.closest("Portal") == null, 5000);
             } else {
@@ -36,6 +39,7 @@ public class WalkingToBank extends Tasks{
 
         if (Players.getLocal().isMoving() && Calculations.random(1, 20) == 1) {
             log("Action -> Moving camera.");
+            Main.currentStatus = "Antiban: Movendo Câmera";
 
             int currentYaw = Camera.getYaw();
             int rotationAmount;
@@ -54,6 +58,7 @@ public class WalkingToBank extends Tasks{
         }
 
         if (Walking.shouldWalk(Calculations.random(3, 7))) {
+            Main.currentStatus = "Caminhando para o Banco";
             log("Action -> Walking to bank.");
             if (Walking.walk(BanksAreas.FALADOR.getArea().getRandomTile())) {
                 return Utils.getGaussian(600, 1200);

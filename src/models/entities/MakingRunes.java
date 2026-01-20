@@ -24,17 +24,17 @@ public class MakingRunes extends Tasks{
     @Override
     public int execute() {
         GameObject altar = GameObjects.closest(obj -> obj.getName().equals("Altar"));
-        if (altar != null && altar.distance() < 20) {
-            int startRunes = Inventory.count("Air rune");
+        if (altar != null && altar.distance() < 30) {
+            int startRunes = Inventory.count(RuinsAreas.FIRE.getRune());
             if (altar.interact("Craft-rune")) {
                 log("Action -> Interacting with Altar.");
                 Sleep.sleepUntil(() -> !Inventory.contains("Rune essence"), 5000);
-                int endRunes = Inventory.count("Air rune");
+                int endRunes = Inventory.count(RuinsAreas.FIRE.getRune());
 
                 int craftedAmount = endRunes - startRunes;
                 if (craftedAmount > 0) {
                     Main.runesCrafted += craftedAmount;
-                    log("Criadas " + craftedAmount + " Air runes. Total: " + Main.runesCrafted);
+                    log("Criadas " + craftedAmount + " " + RuinsAreas.FIRE.getRune() + " . Total: " + Main.runesCrafted);
                 }
             }
             return Utils.getGaussian(600, 900);
@@ -52,6 +52,9 @@ public class MakingRunes extends Tasks{
             if (ruins.interact("Enter")) {
                 log("Action -> Entering altar.");
                 Sleep.sleepUntil(() -> GameObjects.closest("Altar") != null, 5000);
+                Walking.walk(RuinsAreas.FIRE.getAltarTile().getRandomized(2));
+
+                Sleep.sleep(1500, 2000);
             }
             else {
                 Camera.rotateToEntity(ruins);
@@ -60,7 +63,7 @@ public class MakingRunes extends Tasks{
         }
         if (Walking.shouldWalk(6)) {
             Main.currentStatus = "Caminhando para Ruínas";
-            Walking.walk(RuinsAreas.AIR.getArea());
+            Walking.walk(RuinsAreas.FIRE.getArea());
         }
 
         return Utils.getGaussian(400, 800);

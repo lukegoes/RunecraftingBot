@@ -1,6 +1,7 @@
 package models.entities;
 
 import models.enums.BanksAreas;
+import models.enums.RuinsAreas;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.container.impl.bank.Bank;
@@ -17,9 +18,9 @@ public class Preparing extends Tasks{
     @Override
     public boolean accept() {
 
-        return BanksAreas.FALADOR.getArea().contains(Players.getLocal())
+        return BanksAreas.ALKHARID.getArea().contains(Players.getLocal())
                 && !Inventory.contains("Rune essence")
-                || !Equipment.contains("Air tiara");
+                || !Equipment.contains(RuinsAreas.FIRE.getEquipment());
     }
 
     @Override
@@ -36,15 +37,15 @@ public class Preparing extends Tasks{
             Sleep.sleepUntil(Inventory::isEmpty, 3000);
         }
 
-        if (!Equipment.contains("Air tiara")) {
-            if (Bank.contains("Air tiara")) {
+        if (!Equipment.contains(RuinsAreas.FIRE.getEquipment())) {
+            if (Bank.contains(RuinsAreas.FIRE.getEquipment())) {
                 log("Action -> Withdrawing Tiara.");
-                Bank.withdraw("Air tiara", 1);
-                Sleep.sleepUntil(() -> Inventory.contains("Air tiara"), 3000);
+                Bank.withdraw(RuinsAreas.FIRE.getEquipment(), 1);
+                Sleep.sleepUntil(() -> Inventory.contains(RuinsAreas.FIRE.getEquipment()), 3000);
 
-                if (Equipment.equip(EquipmentSlot.HAT, "Air tiara")) {
+                if (Equipment.equip(EquipmentSlot.HAT, RuinsAreas.FIRE.getEquipment())) {
                     log("Action -> Equip Tiara.");
-                    Sleep.sleepUntil(() -> !Inventory.contains("Air tiara"), 3000);
+                    Sleep.sleepUntil(() -> !Inventory.contains(RuinsAreas.FIRE.getEquipment()), 3000);
                 }
             } else {
                 log("Sem Air tiara no corpo e sem estoque no banco!");

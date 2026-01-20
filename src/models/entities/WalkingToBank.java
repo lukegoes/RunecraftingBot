@@ -18,19 +18,19 @@ public class WalkingToBank extends Tasks{
     @Override
     public boolean accept() {
         return !Inventory.contains("Rune essence")
-                && !BanksAreas.FALADOR.getArea().contains(Players.getLocal());
+                && !BanksAreas.ALKHARID.getArea().contains(Players.getLocal());
     }
 
     @Override
     public int execute() {
         Main.currentStatus = "Caminhando para o Banco";
-        GameObject portal = GameObjects.closest("Portal");
+        GameObject portal = GameObjects.closest(p -> p.getName().equals("Portal") && p.distance() < 20);
 
         if (portal != null) {
             log("Action -> Leaving altar.");
             Main.currentStatus = "Saindo do Altar";
             if (portal.interact("Use")) {
-                Sleep.sleepUntil(() -> GameObjects.closest("Portal") == null, 5000);
+                Sleep.sleepUntil(() -> !portal.exists() || portal.distance() > 30, 5000);
             } else {
                 Walking.walk(portal);
             }
@@ -60,7 +60,7 @@ public class WalkingToBank extends Tasks{
         if (Walking.shouldWalk(Calculations.random(3, 7))) {
             Main.currentStatus = "Caminhando para o Banco";
             log("Action -> Walking to bank.");
-            if (Walking.walk(BanksAreas.FALADOR.getArea().getRandomTile())) {
+            if (Walking.walk(BanksAreas.ALKHARID.getArea().getRandomTile())) {
                 return Utils.getGaussian(600, 1200);
             }
         }
